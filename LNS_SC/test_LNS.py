@@ -53,23 +53,8 @@ def make_samples(in_queue):
     m.setRealParam('limits/time', time_limit) 
         
     varss = [x for x in m.getVars()]             
-        
-        # decide the fixed variables based on actions                              
-#        minimum_k = tf.nn.top_k(-actions, k=700)[1].numpy()       #???? 
-
-#    minimum_k = np.argpartition(-actions.squeeze(), -700)[-700:]       #???? 
-
-#    minimum_k = np.where(np.array(actions.squeeze())<0.5)
-
-#    minimum_k = np.where(np.random.binomial(1, actions) <0.5)
 
     if eval_flag==1:
-
-#        minimum_k = np.argpartition(-actions.squeeze(), -700)[-700:]       #???? 
-#        for i in minimum_k:
-#            a,b = m.fixVar(varss[i],obs[i])      
-
-#        minimum_k = np.where(np.random.binomial(1, actions) <0.5)
 
         minimum_k = np.where(np.array(actions.squeeze())<0.5)
         max_k = np.where(np.array(actions.squeeze())>0.5)[0]
@@ -79,7 +64,6 @@ def make_samples(in_queue):
         
     else:
 
-#        minimum_k = np.where(np.random.binomial(1, actions) <0.5)
         minimum_k = np.where(np.array(actions.squeeze())<0.5)
         max_k = np.where(np.array(actions.squeeze())>0.5)[0]
         min_k = minimum_k[0]
@@ -300,9 +284,6 @@ def make_samples0(in_queue):
     abc=time.time()    
     m.optimize()       
     print(time.time()-abc)    
-    # extract formula features
-#     state_buffer={}
-#     state = utilities.extract_state(m, state_buffer)  
 
     b_obj = m.getObjVal()
 
@@ -425,8 +406,6 @@ def collect_samples0(instances, out_dir, rng, n_samples, n_jobs,
         
         collecter.append(sample['state'][2]['values'])
 
-#        print(sample['state'][2]['values'].shape, sample['episode'])
-
         collecterM.append(np.transpose(sample['state'][1]['incidence']))
         
         epi.append(sample['episode'])
@@ -442,8 +421,6 @@ def collect_samples0(instances, out_dir, rng, n_samples, n_jobs,
     shap = np.stack(collecter).shape
 
     X=np.stack(collecter).reshape(-1,13)
-
-#    feats = X[:,[0,2,3,4,5,6,8,9,10,12]]
 
     feats = X[:,[0,1,3,4,5,6,8,9,12]]
 
@@ -468,7 +445,7 @@ def learn(args,network='mlp',
           actor_lr=1e-4,
           critic_lr=1e-3,
           popart=False,
-          gamma=0.99,  #0.9 #0.96
+          gamma=0.99, 
           clip_norm=None,
           nb_train_steps=1, # per epoch cycle and MPI worker,  50 10 30   100  10  3
           nb_eval_steps=1000, #20 #50 #65
@@ -511,7 +488,6 @@ def learn(args,network='mlp',
     # define parameters                
     nb_actions = 1000  #set covering
 
-#    memory = Memory(limit=int(1e4), action_shape=(1000,1,), observation_shape=(1000,20,))
     memory = Memory(limit=int(1e3), action_shape=(1000,1,), observation_shape=(1000,13,))
     critic = Critic_mean(network=network)
     actor = Actor_mean(nb_actions, network=network)
