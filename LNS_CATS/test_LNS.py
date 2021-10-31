@@ -48,8 +48,6 @@ def make_samples(in_queue):
         seed=0
     else:
 
-#        seed=seed
-
         seed=0
   
     m = scip.Model()
@@ -58,39 +56,10 @@ def make_samples(in_queue):
     utilities.init_scip_paramsR(m, seed=seed)  ####params
     m.setIntParam('timing/clocktype', 1)
     m.setRealParam('limits/time', time_limit) 
-
-#         branchrule = SamplingAgent0(
-#             episode=episode,
-#             instance=instance,
-#             seed=seed,
-#             out_queue=out_queue,
-#             exploration_policy=exploration_policy,
-#             query_expert_prob=query_expert_prob,
-#             out_dir=out_dir)
-
-#         m.includeBranchrule(
-#             branchrule=branchrule,
-#             name="Sampling branching rule", desc="",
-#             priority=666666, maxdepth=-1, maxbounddist=1)
         
     varss = [x for x in m.getVars()]             
-        
-        # decide the fixed variables based on actions                              
-#        minimum_k = tf.nn.top_k(-actions, k=700)[1].numpy()       #???? 
-
-#    minimum_k = np.argpartition(-actions.squeeze(), -700)[-700:]       #???? 
-
-#    minimum_k = np.where(np.array(actions.squeeze())<0.5)
-
-#    minimum_k = np.where(np.random.binomial(1, actions) <0.5)
 
     if eval_flag==1:
-
-#        minimum_k = np.argpartition(-actions.squeeze(), -700)[-700:]       #???? 
-#        for i in minimum_k:
-#            a,b = m.fixVar(varss[i],obs[i])      
-
-#        minimum_k = np.where(np.random.binomial(1, actions) <0.5)
 
         minimum_k = np.where(np.array(actions.squeeze())<0.5)
         max_k = np.where(np.array(actions.squeeze())>0.5)[0]
@@ -100,23 +69,15 @@ def make_samples(in_queue):
         
     else:
 
-#        minimum_k = np.where(np.random.binomial(1, actions) <0.5)
         minimum_k = np.where(np.array(actions.squeeze())<0.5)
         max_k = np.where(np.array(actions.squeeze())>0.5)[0]
         min_k = minimum_k[0]
         for i in min_k:
             a,b = m.fixVar(varss[i],obs[i])         
-
-
-#     ### strong
-#     for i in minimum_k[0]:
-#         a,b = m.fixVar(varss[i],obs[i])                  # ???????
    
     m.optimize()
     
     K = [m.getVal(x) for x in m.getVars()]  
-        
-#    obj = m.getObjVal()
 
     obj = m.getPrimalbound()
 
@@ -163,13 +124,10 @@ def send_orders(instances, epi, obs, actions, seed, exploration_policy, eval_fla
     """
     rng = np.random.RandomState(seed)
 
-#    episode = 0
     orders_queue = []
     for i in range(len(instances)):
-#        instance = rng.choice(instances)
         seed = rng.randint(2**32)
         orders_queue.append([epi[i], instances[i], obs[i], actions[i], seed, exploration_policy, eval_flag, time_limit, out_dir])
-#        episode += 1
 
     return orders_queue
 
@@ -202,30 +160,8 @@ def collect_samples(instances, epi, obs, actions, out_dir, rng, n_samples, n_job
         Maximum running time for an episode, in seconds.
     """
 
-    # start workers
-#     orders_queue = mp.Queue(maxsize=2*n_jobs)
-#     answers_queue = mp.SimpleQueue()
-#     workers = []
-    
-#     for i in range(n_jobs):
-#         abc=time.time()
-#         p = mp.Process(
-#                 target=make_samples,
-#                 args=(orders_queue, answers_queue),
-#                 daemon=True)
-#         workers.append(p)
-#         p.start()
-#         print(time.time()-abc) 
-
     tmp_samples_dir = '{}/tmp'.format(out_dir)
     os.makedirs(tmp_samples_dir, exist_ok=True)
-    
-    # start dispatcher
-#     dispatcher = mp.Process(
-#             target=send_orders,
-#             args=(orders_queue, instances, epi, obs, actions, rng.randint(2**32), exploration_policy, query_expert_prob, time_limit, tmp_samples_dir),
-#             daemon=True)
-#     dispatcher.start()
 
     pars = send_orders(instances, epi, obs, actions, rng.randint(2**32), exploration_policy, eval_flag, time_limit, tmp_samples_dir) 
     
@@ -318,15 +254,12 @@ def make_samples0(in_queue):
         Output queue in which to send samples.
     """
 
-#     while True:
     episode, instance, seed, exploration_policy, eval_flag, time_limit, out_dir = in_queue
     print('[w {}] episode {}, seed {}, processing instance \'{}\'...'.format(os.getpid(),episode,seed,instance))
 
     if eval_flag==1:
         seed=0
     else:
-#        seed=seed
-
         seed=0
     
     m = scip.Model()
@@ -334,8 +267,6 @@ def make_samples0(in_queue):
     m.readProblem('{}'.format(instance))
     utilities.init_scip_paramsR(m, seed=seed)   ###H
     m.setIntParam('timing/clocktype', 2)
-#    m.setLongintParam('limits/nodes', 1) 
-#    m.setRealParam('limits/time', 20) 
     m.setParam('limits/solutions', 1)
 
 
@@ -353,9 +284,6 @@ def make_samples0(in_queue):
     abc=time.time()    
     m.optimize()       
     print(time.time()-abc)    
-    # extract formula features
-#     state_buffer={}
-#     state = utilities.extract_state(m, state_buffer)  
 
     b_obj = m.getObjVal()
 
@@ -365,7 +293,7 @@ def make_samples0(in_queue):
         'type': 'formula',
         'episode': episode,
         'instance': instance,
-        'state' : np.random.rand(16000, 17), #branchrule.state,
+        'state' : np.random.rand(4000, 17), #branchrule.state,
         'seed': seed,
         'b_obj': b_obj,
         'sol' : np.array(K),        
@@ -448,27 +376,8 @@ def collect_samples0(instances, out_dir, rng, n_samples, n_jobs,
     """
     os.makedirs(out_dir, exist_ok=True)
 
-    # start workers
-#     orders_queue = mp.Queue(maxsize=2*n_jobs)
-#     answers_queue = mp.SimpleQueue()
-#     workers = []
-#     for i in range(n_jobs):
-#         p = mp.Process(
-#                 target=make_samples0,
-#                 args=(orders_queue, answers_queue),
-#                 daemon=True)
-#         workers.append(p)
-#         p.start()
-
     tmp_samples_dir = '{}/tmp'.format(out_dir)
     os.makedirs(tmp_samples_dir, exist_ok=True)
-
-    # start dispatcher
-#     dispatcher = mp.Process(
-#             target=send_orders0,
-#             args=(orders_queue, instances, n_samples, rng.randint(2**32), exploration_policy, batch_id, time_limit, tmp_samples_dir),
-#             daemon=True)
-#     dispatcher.start()
     
     pars = send_orders0(instances, n_samples, rng.randint(2**32), exploration_policy, batch_id, eval_flag, time_limit, tmp_samples_dir)  
     
@@ -491,12 +400,8 @@ def collect_samples0(instances, out_dir, rng, n_samples, n_jobs,
     for sample in out_Q:
         
         ini_sol.append(sample['sol'])         
-        
-#        collecter.append(sample['state'][2]['values'])
 
         collecter.append(sample['state'])
-
-
         
         epi.append(sample['episode'])
         
@@ -536,7 +441,7 @@ def learn(args,network='mlp',
           batch_size=500, # per MPI worker  64 32  64   128   64  128
           tau=0.01,
           eval_env=None,
-          load_path='models/RL_model/model50012.joblib',
+          load_path='models/RL_model/model_graph.joblib',
           save_path=None,
           param_noise_adaption_interval=30):                    
                     
@@ -552,16 +457,10 @@ def learn(args,network='mlp',
     instances_valid = []
 
     if args.problem == 'cauctions':
-#        instances_train = glob.glob('data/instances/setcover/train_500r_1000c_0.05d/*.lp')
-
-#        instances_valid += ["data/instances/setcover/transfer_2000r_1000c_0.05d/instance_{}.lp".format(i+1) for i in range(4)]
 
         instances_train = glob.glob('data/instances/cauctions/train_2000_4000/*.lp')
+        instances_valid = glob.glob('data/instances/cauctions/test_2000_4000/*.lp')
 
-#        instances_valid += ["data/instances/setcover/validation5000/instance_{}.lp".format(i+1) for i in range(10)]
-        instances_valid = glob.glob('data/instances/cauctions/test800016000/*.lp')
-
-#        instances_test = glob.glob('data/instances/setcover/test_500r_1000c_0.05d/*.lp')
         out_dir = 'data/samples/setcover/500r_1000c_0.05d'
     else:
         raise NotImplementedError
@@ -575,9 +474,9 @@ def learn(args,network='mlp',
                     
                     
     # define parameters                
-    nb_actions = 16000  #set covering
+    nb_actions = 4000  #set covering
 
-    memory = Memory(limit=int(5e2), action_shape=(16000,1,), observation_shape=(16000,20,))
+    memory = Memory(limit=int(5e2), action_shape=(4000,1,), observation_shape=(4000,20,))
     critic = Critic_mean(network=network)
     actor = Actor_mean(nb_actions, network=network)
 
@@ -600,7 +499,7 @@ def learn(args,network='mlp',
             else:
                 raise RuntimeError('unknown noise type "{}"'.format(current_noise_type))
 
-    agent = DDPG(actor, critic, memory, (16000,), (16000,),
+    agent = DDPG(actor, critic, memory, (4000,), (4000,),
         gamma=gamma, tau=tau, normalize_returns=normalize_returns, normalize_observations=normalize_observations,
         batch_size=batch_size, action_noise=action_noise, param_noise=param_noise, critic_l2_reg=critic_l2_reg,
         actor_lr=actor_lr, critic_lr=critic_lr, enable_popart=popart, clip_norm=clip_norm,
@@ -661,7 +560,6 @@ def learn(args,network='mlp',
                 if cycle%1==0:
                     episodes = 0 #scalar
                     t = 0 # scalar    
-#                    obj_lis = []
                 
                     for cyc in range(len(instances_valid)//batch_sample_eval):
                         ### initial formulation features
@@ -676,11 +574,9 @@ def learn(args,network='mlp',
                      
                         ### initial solution
                         if args.problem == 'cauctions':     
-                            init_sols = ini_sol  
-#                            init_sols = np.stack([np.zeros(16000) for _ in range(batch_sample_eval)])    
+                            init_sols = ini_sol   
 
                         ori_objs=np.copy(best_root)  
-#                        ori_objs=np.zeros(batch_sample_eval)
 
                         cur_sols=init_sols                                
                         record_ini=np.copy(best_root)
@@ -691,7 +587,7 @@ def learn(args,network='mlp',
                         inc_val = np.stack([rec_inc[r][-1] for r in range(batch_sample)])#ADD
                         avg_inc_val = np.stack([np.array(rec_inc[r]).mean(0) for r in range(batch_sample)])#ADD 
 
-                        pre_sols = np.ones([2,batch_sample_eval,16000])
+                        pre_sols = np.ones([2,batch_sample_eval,4000])
                         cur_obs = np.concatenate((formu_feat, inc_val[:,:,np.newaxis], avg_inc_val[:,:,np.newaxis], pre_sols.transpose(1,2,0), cur_sols[:,:,np.newaxis]), axis=-1)         
                                         
                         mask = None
@@ -707,20 +603,11 @@ def learn(args,network='mlp',
                                 print(action)     
 
                             if t_rollout>20:
-
-#                            if np.random.uniform()<0.5:
-                                action=np.ones((batch_sample,nb_actions,1))*0.5 
-#                               action=np.random.uniform(low=0.0, high=1.0,size=(batch_sample,nb_actions,1))  
-
-                         
+                                action=np.ones((batch_sample,nb_actions,1))*0.5                          
 
                             action = np.random.binomial(1, action)
                             action=np.where(action > 0.5, action, 0.)  
                             action=np.where(action == 0., action, 1.)  
- 
-#                            if mask is not None:
-#                                for m in range(batch_sample_eval):
-#                                    action[m][mask[m]]=0.
                  
                             # Execute next action. derive next solution(state)
                             cur_sols, epi, cur_objs, instances, mask = collect_samples(instances, epi, cur_sols, action, out_dir + '/train', rng, batch_sample,
