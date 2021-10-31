@@ -8,7 +8,7 @@ Yaoxin Wu, Wen Song, Zhiguang Cao, Jie Zhang. Learning Large Neighborhood Search
 
 ## Running the program
 
-For each problem and size:
+For each problem:
 
 ### Training
 
