@@ -24,4 +24,4 @@ python3 test_LNS.py
 
 ## Installation
 
-The dependencies are the same as in https://github.com/ds4dm/learn2branch
+The requirements are the same as in https://github.com/ds4dm/learn2branch
