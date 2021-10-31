@@ -13,19 +13,11 @@ For each problem and size:
 ### Training
 
 ```
-python3 run.py
-```
-or run jupyter file
-```
-RUN MY MODEL.ipynb
+python3 train_LNS.py
 ```
 
 ### Testing
 
 ```
-python3 test.py
-```
-or run jupyter file
-```
-Test with model.ipynb
+python3 test_LNS.py
 ```
