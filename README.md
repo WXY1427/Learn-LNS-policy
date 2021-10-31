@@ -4,17 +4,7 @@ A DRL method to learn LNS for solving integer programming.
 
 ## Paper
 
-For more details, please refer to: Yaoxin Wu, Wen Song, Zhiguang Cao, Jie Zhang and Andrew Lim. Learning Improvement Heuristics for Solving Routing Problems, IEEE Transactions on Neural Networks and Learning Systems, 2021 (https://ieeexplore.ieee.org/document/9393606). 
-
-```
-@article{wu2021learning,
-  title={Learning Improvement Heuristics for Solving Routing Problems..},
-  author={Wu, Yaoxin and Song, Wen and Cao, Zhiguang and Zhang, Jie and Lim, Andrew},
-  journal={IEEE Transactions on Neural Networks and Learning Systems},
-  year={2021},
-  publisher={IEEE}
-}
-```
+Yaoxin Wu, Wen Song, Zhiguang Cao, Jie Zhang. Learning Large Neighborhood Search Policy for Integer Programming. 35th Conference on Neural Information Processing Systems (NeurIPS), 2021.
 
 ## Running the program
 
