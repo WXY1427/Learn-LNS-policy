@@ -21,3 +21,6 @@ python3 train_LNS.py
 ```
 python3 test_LNS.py
 ```
+
+## Requirements
+
