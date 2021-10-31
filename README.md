@@ -22,5 +22,6 @@ python3 train_LNS.py
 python3 test_LNS.py
 ```
 
-## Requirements
+## Installation
 
+The dependencies are the same as in https://github.com/ds4dm/learn2branch
