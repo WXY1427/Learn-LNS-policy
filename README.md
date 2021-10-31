@@ -11,17 +11,13 @@ Yaoxin Wu, Wen Song, Zhiguang Cao, Jie Zhang. Learning Large Neighborhood Search
 For each problem:
 
 ### Training
-
 ```
 python3 train_LNS.py
 ```
-
 ### Testing
-
 ```
 python3 test_LNS.py
 ```
-
 ## Installation
 
 The requirements are the same as in https://github.com/ds4dm/learn2branch
