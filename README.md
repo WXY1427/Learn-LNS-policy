@@ -8,7 +8,7 @@ Yaoxin Wu, Wen Song, Zhiguang Cao, Jie Zhang. [Learning Large Neighborhood Searc
 
 ```
 @inproceedings{wu2021learning,
-    author = {Yaoxin Wu, Wen Song, Zhiguang Cao, Jie Zhang},
+    author = {Wu, Yaoxin and Song, Wen and Cao, Zhiguang and Zhang, Jie},
     booktitle = {Advances in Neural Information Processing Systems},
     title = {Learning Large Neighborhood Search Policy for Integer Programming},
     year = {2021}
