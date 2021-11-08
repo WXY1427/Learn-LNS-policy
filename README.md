@@ -4,7 +4,7 @@ A DRL method to learn LNS for solving integer programming.
 
 ## Paper
 
-Yaoxin Wu, Wen Song, Zhiguang Cao, Jie Zhang. “[Learning Large Neighborhood Search Policy for Integer Programming](https://arxiv.org/abs/2110.02544).” 35th Conference on Neural Information Processing Systems (NeurIPS), 2021.
+Yaoxin Wu, Wen Song, Zhiguang Cao, Jie Zhang. [Learning Large Neighborhood Search Policy for Integer Programming](https://arxiv.org/abs/2111.03466). 35th Conference on Neural Information Processing Systems (NeurIPS), 2021.
 
 ```
 @inproceedings{wu2021learning,
