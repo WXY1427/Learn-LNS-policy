@@ -8,10 +8,9 @@ Yaoxin Wu, Wen Song, Zhiguang Cao, Jie Zhang. Learning Large Neighborhood Search
 
 ```
 @inproceedings{ma2021learning,
-    author = {Ma, Yining and Li, Jingwen and Cao, Zhiguang and Song, Wen and Zhang, Le and Chen, Zhenghua and Tang, Jing},
+    author = {Yaoxin Wu, Wen Song, Zhiguang Cao, Jie Zhang},
     booktitle = {Advances in Neural Information Processing Systems},
-    title = {Learning to Iteratively Solve Routing Problems with Dual-Aspect Collaborative Transformer},
-    volume = {34},
+    title = {Learning Large Neighborhood Search Policy for Integer Programming},
     year = {2021}
 }
 ```
